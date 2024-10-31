@@ -1,2 +1,2 @@
 # money-matrix
-gaming application
+gaming application having both frontend and backend
