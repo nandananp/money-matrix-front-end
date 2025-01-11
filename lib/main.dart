@@ -168,11 +168,75 @@ class InstructionsPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const NextPage(),
+                    builder: (context) => const LevelsPage(), // Navigate to LevelsPage
                   ),
                 );
               },
               child: const Text('Next'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LevelsPage extends StatelessWidget {
+  const LevelsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.lightBlueAccent,
+      appBar: AppBar(
+        title: const Text('Levels'),
+        backgroundColor: Colors.green,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Choose a Level:',
+              style: TextStyle(fontSize: 24),
+            ),
+            const SizedBox(height: 20), // Add some spacing
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NextPage(),
+                  ),
+                );
+              },
+              child: const Text('Level 1'), // Navigate to Level 1 page
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                // Level 2 is locked, do nothing or show a message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Level 2 is locked!')),
+                );
+              },
+              child: const Text('Level 2'), // Locked level
+              style: ElevatedButton.styleFrom(
+                primary: Colors.cyan, // Gray for locked level
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                // Level 3 is locked, do nothing or show a message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Level 3 is locked!')),
+                );
+              },
+              child: const Text('Level 3'), // Locked level
+              style: ElevatedButton.styleFrom(
+                primary: Colors.grey, // Gray for locked level
+              ),
             ),
           ],
         ),
@@ -195,7 +259,6 @@ class NextPage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: [
             const Text(
               'Welcome to LEVEL 1!', // Updated content
