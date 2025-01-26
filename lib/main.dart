@@ -4,6 +4,7 @@ void main() {
   runApp(const MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -16,10 +17,83 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Welcome to Money Matrix'),
+      home: const RegistrationPage(title: "Welcome to Money Matrix"),
     );
   }
 }
+
+
+
+
+
+
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key, required String title});
+
+  @override
+  State<RegistrationPage> createState() => _RegistrationPageState();
+}
+
+class _RegistrationPageState extends State<RegistrationPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _register() {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    if (username.isNotEmpty && password.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration Successful')),
+      );
+      // Navigate to the next page or handle registration logic here
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in both fields')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Registration Page'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(labelText: 'Username'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const MyHomePage(title: 'WELCOME TO MONEY MATRIX',),
+                  ),
+                );
+              },
+              child: const Text('Submit'),
+
+
+        ),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -98,9 +172,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.cyan, // Set color for background
+      backgroundColor: Colors.green, // Set color for background
       appBar: AppBar(
-        backgroundColor: Colors.pink, // Customize app bar background if needed
+        backgroundColor: Colors.black, // Customize app bar background if needed
         title: Text(
           widget.title,
           style: const TextStyle(color: Colors.limeAccent), // Set blue color for title
@@ -149,9 +223,9 @@ class InstructionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.tealAccent,
+      backgroundColor: Colors.green,
       appBar: AppBar(
-        backgroundColor: Colors.purpleAccent,
+        backgroundColor: Colors.white,
         title: const Text('Instructions'),
       ),
       body: Center(
@@ -187,10 +261,10 @@ class LevelsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Colors.green,
       appBar: AppBar(
         title: const Text('Levels'),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white,
       ),
       body: Center(
         child: Column(
@@ -251,10 +325,10 @@ class NextPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Colors.green,
       appBar: AppBar(
         title: const Text('LEVEL 1'), // Updated heading
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white,
       ),
       body: Center(
         child: Column(
