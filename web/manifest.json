@@ -1,6 +1,6 @@
 {
-    "name": "gamedevelopment",
-    "short_name": "gamedevelopment",
+    "name": "money_matrix",
+    "short_name": "money_matrix",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
