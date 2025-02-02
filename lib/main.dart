@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:money_matrix/SpinScreen.dart';
 import 'package:money_matrix/SplashScreen.dart';
 import 'package:money_matrix/registration.dart';
 import 'package:money_matrix/LoginPage.dart';
 import 'package:money_matrix/secondScreen.dart';
 import 'package:money_matrix/InstructionsPage.dart';
 import 'package:money_matrix/StartGamePage.dart';
+import 'package:money_matrix/SpinScreen.dart';
 
 void main() {
     runApp(const MoneyMatrixApp());
@@ -28,6 +30,7 @@ class MoneyMatrixApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/instructions': (context) => const InstructionsPage(),
         '/startGame': (context) => const StartGamePage(),
+        '/spin': (context) => const SpinScreen(),
       },
     );
   }
