@@ -127,7 +127,7 @@ class _StartGamePageState extends State<StartGamePage> {
                       ),
                     ),
                     child: const Text(
-                      "Go to next event",
+                      "My next event",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
