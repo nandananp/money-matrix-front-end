@@ -75,37 +75,37 @@ class _InstructionsPageState extends State<InstructionsPage> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
-                ? Center(
-                child: Text(_errorMessage!,
-                    style: const TextStyle(color: Colors.red)))
-                : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _instructions.length,
-              itemBuilder: (context, index) {
-                final instruction = _instructions[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                        child: Text(instruction['level'].toString())),
-                    title: Text(instruction['instruction']),
-                  ),
-                );
-              },
-            ),
+                    ? Center(
+                        child: Text(_errorMessage!,
+                            style: const TextStyle(color: Colors.red)))
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: _instructions.length,
+                        itemBuilder: (context, index) {
+                          final instruction = _instructions[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                  child: Text(instruction['level'].toString())),
+                              title: Text(instruction['instruction']),
+                            ),
+                          );
+                        },
+                      ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(
-                  context,"/startGame");
+                Navigator.pushNamed(context, "/startGame");
               },
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
                 textStyle: const TextStyle(fontSize: 18),
               ),
-              child: const Text("Start Game"),
+              child: const Text("Start Level 1"),
             ),
           ),
         ],

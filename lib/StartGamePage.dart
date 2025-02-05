@@ -45,7 +45,7 @@ class _StartGamePageState extends State<StartGamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Game Start"),
+        title: const Text("who am i"),
         backgroundColor: Colors.deepPurple,
       ),
       body: gameData == null
@@ -127,7 +127,7 @@ class _StartGamePageState extends State<StartGamePage> {
                       ),
                     ),
                     child: const Text(
-                      "Go to Spin Screen",
+                      "Go to next event",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),

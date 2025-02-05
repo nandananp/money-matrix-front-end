@@ -108,7 +108,7 @@ class _SpinScreenState extends State<SpinScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Spin to Win"),
+        title: const Text("spin event"),
         backgroundColor: Colors.deepPurple,
       ),
       body: Center(
