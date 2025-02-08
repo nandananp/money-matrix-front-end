@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:money_matrix/EventScreen.dart';
+import 'package:money_matrix/WheelPainter.dart';
 
 class SpinScreen extends StatefulWidget {
   const SpinScreen({super.key});
@@ -30,6 +32,7 @@ class _SpinScreenState extends State<SpinScreen>
   final String apiUrl = "http://10.0.2.2:8080/v1/user/game/next-event";
   int targetIndex = 0;
   bool isSpinning = false;
+  Map<String, dynamic>? eventDetails;
 
   @override
   void initState() {
@@ -42,7 +45,7 @@ class _SpinScreenState extends State<SpinScreen>
   }
 
   Future<void> spinWheel() async {
-    if (isSpinning) return; // Prevent multiple spins
+    if (isSpinning) return;
     setState(() {
       isSpinning = true;
     });
@@ -58,17 +61,18 @@ class _SpinScreenState extends State<SpinScreen>
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      String eventType = responseData["eventType"];
+      eventDetails = jsonDecode(response.body);
+      String eventType = eventDetails!["eventType"];
       setState(() {
         targetIndex = options.indexOf(eventType);
+        isSpinning = true;
       });
       startSpin();
     } else {
       setState(() {
         isSpinning = false;
       });
-      if(!mounted) return;
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Failed to fetch spin result")),
       );
@@ -77,7 +81,7 @@ class _SpinScreenState extends State<SpinScreen>
 
   void startSpin() {
     final random = Random();
-    int spins = 3 + random.nextInt(5); // Ensure at least 3 full rotations
+    int spins = 3 + random.nextInt(5);
     double targetRotation =
         spins * 2 * pi + (targetIndex * (2 * pi / options.length));
 
@@ -95,8 +99,14 @@ class _SpinScreenState extends State<SpinScreen>
         if (status == AnimationStatus.completed) {
           setState(() {
             selectedOption = options[targetIndex];
-            isSpinning = false; // Allow spinning again
+            isSpinning = false;
           });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventScreen(eventDetails: eventDetails!),
+            ),
+          );
         }
       });
 
@@ -108,7 +118,7 @@ class _SpinScreenState extends State<SpinScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("spin event"),
+        title: const Text("Spin Event"),
         backgroundColor: Colors.deepPurple,
       ),
       body: Center(
@@ -143,18 +153,17 @@ class _SpinScreenState extends State<SpinScreen>
                 const Positioned(
                   top: 20,
                   child:
-                      Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
+                  Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
                 ),
               ],
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: isSpinning ? null : spinWheel,
-              // Disable button while spinning
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
                 padding:
-                    const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -162,15 +171,6 @@ class _SpinScreenState extends State<SpinScreen>
               child: const Text("Spin",
                   style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
-            if (selectedOption.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "You landed on: $selectedOption",
-                  style: const TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
           ],
         ),
       ),
@@ -182,33 +182,4 @@ class _SpinScreenState extends State<SpinScreen>
     _controller.dispose();
     super.dispose();
   }
-}
-
-class WheelPainter extends CustomPainter {
-  final List<String> options;
-
-  WheelPainter(this.options);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..style = PaintingStyle.fill;
-
-    final double radius = size.width / 2;
-    final Offset center = Offset(radius, radius);
-    final double sweepAngle = 2 * pi / options.length;
-
-    for (int i = 0; i < options.length; i++) {
-      paint.color = Colors.primaries[i % Colors.primaries.length];
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        i * sweepAngle,
-        sweepAngle,
-        true,
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
