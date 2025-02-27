@@ -79,6 +79,11 @@ class _StartGamePageState extends State<StartGamePage> {
                   "Passive Income: ₹${gameData!["passiveIncome"]}",
                   style: const TextStyle(fontSize: 18),
                 ),
+                Text(
+                  "Savings: ₹${gameData!["savings"]}",
+                  style: const TextStyle(fontSize: 18),
+                ),
+
                 const Divider(height: 20, thickness: 1),
                 const Text(
                   "Liabilities:",
