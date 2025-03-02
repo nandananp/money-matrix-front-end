@@ -13,11 +13,13 @@ class FinancialReportScreen extends StatefulWidget {
 
 class _FinancialReportScreenState extends State<FinancialReportScreen> {
   Map<String, dynamic>? financialData;
+  bool hasShownPopup = false; // To ensure popup is shown only once
 
   @override
   void initState() {
     super.initState();
     fetchFinancialReport();
+    checkLevelStatus(1); // Fetch level status
   }
 
   Future<void> fetchFinancialReport() async {
@@ -31,16 +33,36 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       setState(() {
         financialData = json.decode(response.body);
       });
-      checkLevelCompletion();
+      // Check after fetching data
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Failed to fetch financial data")));
     }
   }
 
-  void checkLevelCompletion() {
-    if (financialData?['level'] == 1 && (financialData?['liabilities']?.isEmpty ?? true)) {
-      showLevelCompletionPopup();
+  Future<void> checkLevelStatus(int levelNumber) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('jwt_token');
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:8080/v1/user/status/level/$levelNumber'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final levelData = json.decode(response.body);
+      if (levelData['levelFlag'] == true) {
+        showLevelCompletionPopup();
+      }
+    }
+  }
+
+  void checkAndShowLevelCompletionPopup() {
+    if (!hasShownPopup && financialData?['liabilities'] != null) {
+      bool allSettled = financialData!['liabilities'].isEmpty;
+      if (allSettled) {
+        hasShownPopup = true; // Mark popup as shown
+        showLevelCompletionPopup();
+      }
     }
   }
 
@@ -114,6 +136,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       },
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
