@@ -1,4 +1,4 @@
-# money_matrix
+# my_money_matrix
 
 A new Flutter project.
 
