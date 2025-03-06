@@ -29,7 +29,7 @@ class _SpinScreenState extends State<SpinScreen>
     "HOUSE"
   ];
   String selectedOption = "";
-  final String apiUrl = "http://10.0.2.2:8080/v1/user/game/next-event";
+  final String apiUrl = "http://localhost:8080/v1/user/game/next-event";
   int targetIndex = 0;
   bool isSpinning = false;
   Map<String, dynamic>? eventDetails;

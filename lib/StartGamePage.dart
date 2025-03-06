@@ -13,7 +13,7 @@ class StartGamePage extends StatefulWidget {
 
 class _StartGamePageState extends State<StartGamePage> {
   Map<String, dynamic>? gameData;
-  final String apiUrl = "http://10.0.2.2:8080/v1/user/start/game";
+  final String apiUrl = "http://localhost:8080/v1/user/start/game";
 
   @override
   void initState() {

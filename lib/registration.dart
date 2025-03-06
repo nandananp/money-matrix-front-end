@@ -23,7 +23,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/v1/user/register'),
+        Uri.parse('http://localhost:8080/v1/user/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': _emailController.text,

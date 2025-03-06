@@ -23,7 +23,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
   }
 
   Future<void> fetchFinancialReport() async {
-    const String apiUrl = 'http://10.0.2.2:8080/v1/user/game/status';
+    const String apiUrl = 'http://localhost:8080/v1/user/game/status';
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('jwt_token');
     final response = await http
@@ -44,7 +44,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     final prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('jwt_token');
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:8080/v1/user/status/level/$levelNumber'),
+      Uri.parse('http://localhost:8080/v1/user/status/level/$levelNumber'),
       headers: {'Authorization': 'Bearer $token'},
     );
 
@@ -98,7 +98,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     }
 
     final response = await http.post(
-      Uri.parse("http://10.0.2.2:8080/v1/user/update/$liabilityId"),
+      Uri.parse("http://localhost:8080/v1/user/update/$liabilityId"),
       headers: {'Authorization': 'Bearer $token'},
     );
 

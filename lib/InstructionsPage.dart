@@ -36,7 +36,7 @@ class _InstructionsPageState extends State<InstructionsPage> {
       }
 
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8080/v1/user/info/levels'),
+        Uri.parse('http://localhost:8080/v1/user/info/levels'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

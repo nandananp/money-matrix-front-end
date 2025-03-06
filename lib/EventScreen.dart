@@ -11,7 +11,7 @@ class EventScreen extends StatelessWidget {
   const EventScreen({super.key, required this.eventDetails});
 
   Future<void> submitDecision(BuildContext context, String decision) async {
-    const String apiUrl = "http://10.0.2.2:8080/v1/user/game/event-decision";
+    const String apiUrl = "http://localhost:8080/v1/user/game/event-decision";
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('jwt_token');
 
