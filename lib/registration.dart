@@ -1,92 +1,160 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+import 'package:money_matrix/LoginPage.dart';
+
+class GamingRegistrationPage extends StatefulWidget {
+  const GamingRegistrationPage({super.key});
 
   @override
-  _RegistrationPageState createState() => _RegistrationPageState();
+  _GamingRegistrationPageState createState() => _GamingRegistrationPageState();
 }
 
-class _RegistrationPageState extends State<RegistrationPage> {
+class _GamingRegistrationPageState extends State<GamingRegistrationPage> {
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? _errorMessage;
+  bool _obscureText = true;
 
   Future<void> _registerUser() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() {
-      _errorMessage = null;
-    });
+    const String apiUrl = 'http://localhost:8080/v1/user/register';
 
-    try {
-      final response = await http.post(
-        Uri.parse('http://localhost:8080/v1/user/register'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'username': _emailController.text,
-          'password': _passwordController.text,
-        }),
-      );
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "username": _usernameController.text,
+        "email": _emailController.text,
+        "password": _passwordController.text,
+      }),
+    );
 
-      if (!mounted) return; // Ensure widget is still in the tree
+    final responseData = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
-        Navigator.pushNamed(context, '/login');
-      } else if (response.statusCode == 400) {
-        setState(() {
-          _errorMessage = 'User already exists';
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'Registration failed. Please try again later.';
-        });
-      }
-    } catch (e) {
-      if(mounted){
-        Navigator.pushNamed(context, "/login");
-      }
+    if (response.statusCode == 200) {
+      _showPopup("Success", "${responseData['message']}", true);
+    } else if (response.statusCode == 400) {
+      _showPopup("Error", "${responseData['message']}", false);
+    } else {
+      _showPopup("Error", "Registration failed. Please try again.", false);
     }
+  }
+
+  void _showPopup(String title, String message, bool isSuccess) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              if (isSuccess) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              }
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Username'),
-                keyboardType: TextInputType.name,
-                validator: (value) => value!.isEmpty ? 'please enter a username' : null,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (value) => value!.isEmpty ? 'please enter a Password' : null,
+              const Text(
+                "GAMING UI | Register",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 20),
-              if (_errorMessage != null)
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.red, fontSize: 14),
-                ),
+              _buildTextField(_usernameController, "Username", Icons.person),
+              const SizedBox(height: 15),
+              _buildPasswordField(),
+              const SizedBox(height: 15),
+              _buildTextField(_emailController, "Email", Icons.email),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _registerUser,
-                child: const Text('submit'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                child: const Text(
+                  "Register",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label, IconData icon) {
+    return TextField(
+      controller: controller,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.cyan),
+        prefixIcon: Icon(icon, color: Colors.cyan),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.cyan),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.purple, width: 2),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextField(
+      controller: _passwordController,
+      obscureText: _obscureText,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: "Password",
+        labelStyle: const TextStyle(color: Colors.pinkAccent),
+        prefixIcon: const Icon(Icons.lock, color: Colors.pinkAccent),
+        suffixIcon: IconButton(
+          icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.pinkAccent),
+          onPressed: () {
+            setState(() {
+              _obscureText = !_obscureText;
+            });
+          },
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.pinkAccent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.blueAccent, width: 2),
         ),
       ),
     );

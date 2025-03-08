@@ -26,7 +26,7 @@ class MoneyMatrixApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/option': (context) => const SecondScreen(),
-        '/register': (context) => const RegistrationPage(),
+        '/register': (context) => const GamingRegistrationPage(),
         '/login': (context) => const LoginPage(),
         '/instructions': (context) => const InstructionsPage(),
         '/startGame': (context) => const StartGamePage(),
