@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'SpinScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:money_matrix/SecondLevelActivityScreen.dart';
 
 class FinancialReportScreen extends StatefulWidget {
   const FinancialReportScreen({super.key});
@@ -76,7 +77,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               "You have successfully completed Level One by making your liabilities zero. Let's build passive incomes now!"),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.popAndPushNamed(context,'/second_activity'),
               child: const Text("Continue"),
             ),
           ],
@@ -92,9 +93,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     int amountToPay = int.parse(fullAmount);
 
     if (savings < amountToPay) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("You don't have enough money!")));
-      return;
+      showTopSnackBar(context, "You don't have enough money!", Colors.red);
     }
 
     final response = await http.post(
@@ -104,12 +103,46 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
 
     if (response.statusCode == 200) {
       fetchFinancialReport();
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Liability settled successfully!")));
+      showTopSnackBar(context, "Liability settled successfully!", Colors.green);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to settle liability")));
+      showTopSnackBar(context, "You don't have enough money!", Colors.red);
     }
+  }
+
+  void showTopSnackBar(BuildContext context, String message, Color bgColor) {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 50, // Adjust top margin
+        left: MediaQuery.of(context).size.width * 0.1,
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(color: Colors.black26, blurRadius: 4, spreadRadius: 2),
+              ],
+            ),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay.insert(overlayEntry);
+
+    // Remove the overlay after 2 seconds
+    Future.delayed(const Duration(seconds: 1), () {
+      overlayEntry.remove();
+    });
   }
 
   void showSettlementDialog(String liabilityId, String fullAmount) {

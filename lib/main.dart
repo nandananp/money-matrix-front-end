@@ -7,6 +7,7 @@ import 'package:money_matrix/secondScreen.dart';
 import 'package:money_matrix/InstructionsPage.dart';
 import 'package:money_matrix/StartGamePage.dart';
 import 'package:money_matrix/SpinScreen.dart';
+import 'package:money_matrix/SecondLevelActivityScreen.dart';
 
 void main() {
     runApp(const MoneyMatrixApp());
@@ -31,6 +32,7 @@ class MoneyMatrixApp extends StatelessWidget {
         '/instructions': (context) => const InstructionsPage(),
         '/startGame': (context) => const StartGamePage(),
         '/spin': (context) => const SpinScreen(),
+        '/second_activity': (context) => const SecondActivityScreen(),
       },
     );
   }
