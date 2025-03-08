@@ -6,27 +6,40 @@ class SecondScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Center(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/register'),
-                child: const Text('Register'),
-              ),
+              _buildButton(context, 'Register', Colors.red, '/register'),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, "/login"),
-                child: const Text('Login'),
-              )
+              _buildButton(context, 'Login', Colors.blue, '/login'),
             ],
           ),
         ),
       ),
+    );
+  }
 
+  Widget _buildButton(BuildContext context, String text, Color color, String route) {
+    return ElevatedButton(
+      onPressed: () => Navigator.pushNamed(context, route),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        shadowColor: Colors.white.withOpacity(0.5),
+        elevation: 10,
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
