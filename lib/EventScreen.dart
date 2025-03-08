@@ -83,11 +83,11 @@ class EventScreen extends StatelessWidget {
                     Text("Description: ${eventDetails["eventDescription"]}", style: const TextStyle(fontSize: 16)),
                     Text("Mandatory: ${eventDetails["eventMandatory"]}", style: const TextStyle(fontSize: 16)),
                     if (eventDetails["eventFixedAmount"] != null)
-                      Text("Fixed Amount: \$${eventDetails["eventFixedAmount"]}", style: const TextStyle(fontSize: 16)),
+                      Text("Fixed Amount: ₹${eventDetails["eventFixedAmount"]}", style: const TextStyle(fontSize: 16)),
                     if (eventDetails["eventMinimumAmount"] != null && eventDetails["eventMaximumAmount"] != null)
-                      Text("Amount Range: \$${eventDetails["eventMinimumAmount"]} - \$${eventDetails["eventMaximumAmount"]}", style: const TextStyle(fontSize: 16)),
+                      Text("Amount Range: ₹${eventDetails["eventMinimumAmount"]} - ₹${eventDetails["eventMaximumAmount"]}", style: const TextStyle(fontSize: 16)),
                     if (eventDetails["eventCurrentPrice"] != null)
-                      Text("Current Price: \$${eventDetails["eventCurrentPrice"]}", style: const TextStyle(fontSize: 16)),
+                      Text("Current Price: ₹${eventDetails["eventCurrentPrice"]}", style: const TextStyle(fontSize: 16)),
                   ],
                 ),
               ),

@@ -63,6 +63,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       if (allSettled) {
         hasShownPopup = true; // Mark popup as shown
         showLevelCompletionPopup();
+      }else{
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const SpinScreen()));
       }
     }
   }
@@ -184,10 +186,10 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
           Text("Job: ${financialData?["jobName"]}",
               style: const TextStyle(
                   fontSize: 18, fontWeight: FontWeight.bold)),
-          Text("Salary: \$${financialData?["salary"]}"),
-          Text("Passive Income: \$${financialData?["passiveIncome"]}"),
+          Text("Salary: ₹${financialData?["salary"]}"),
+          Text("Passive Income: ₹${financialData?["passiveIncome"]}"),
           Text("Game Status: ${financialData?["gameStatus"]}"),
-          Text("Savings: \$${financialData?["savings"]}"),
+          Text("Savings: ₹${financialData?["savings"]}"),
           const SizedBox(height: 16),
 
           // Mutual Funds Section
@@ -198,7 +200,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               ?.map<Widget>((fund) => ListTile(
             title: Text(fund["mutualFundName"] ?? "Unknown"),
             subtitle: Text(
-                "Total Return: \$${fund["totalReturn"]}, SIP: \$${fund["sipAmount"]}"),
+                "Total Return: ₹${fund["totalReturn"]}, SIP: ₹${fund["sipAmount"]}"),
           )),
           const SizedBox(height: 16),
 
@@ -209,7 +211,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
           ...?financialData?["stocks"]?.map<Widget>((stock) => ListTile(
             title: Text(stock["stockName"]),
             subtitle: Text(
-                "Stock Count: ${stock["stockCount"]}, Invested: \$${stock["investedAmount"]}"),
+                "Stock Count: ${stock["stockCount"]}, Invested: ₹${stock["investedAmount"]}"),
           )),
           const SizedBox(height: 16),
 
@@ -221,7 +223,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               ?.map<Widget>((liability) => ListTile(
             title: Text(liability["liabilityName"].toUpperCase()),
             subtitle: Text(
-                "EMI: \$${liability["emi"]}, Full Amount: \$${liability["fullAmount"]}"),
+                "EMI: ₹${liability["emi"]}, Full Amount: ₹${liability["fullAmount"]}"),
             trailing: ElevatedButton(
               onPressed: () => showSettlementDialog(
                   liability["liabilityId"],
@@ -233,10 +235,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
 
           // Go to Spin Screen Button
           ElevatedButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SpinScreen()),
-            ),
+            onPressed: () => checkAndShowLevelCompletionPopup(),
             child: const Text("next month event"),
           ),
         ],
