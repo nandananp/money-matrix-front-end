@@ -177,7 +177,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Financial Report")),
+      appBar: AppBar(title: const Text("Your financial Report is here"),backgroundColor: Colors.deepPurple,),
       body: financialData == null
           ? const Center(child: CircularProgressIndicator())
           : ListView(

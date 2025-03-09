@@ -54,8 +54,8 @@ class EventScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Event Decision"),
-        backgroundColor: Colors.deepPurple,
+        title: const Text("Your decision depends on your financial knowledge!"),
+        backgroundColor: Colors.white,
         elevation: 4,
       ),
       body: Padding(

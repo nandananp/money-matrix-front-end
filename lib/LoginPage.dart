@@ -93,37 +93,48 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Username'),
-                keyboardType: TextInputType.name,
-                validator: (value) => value!.isEmpty ? 'Enter an email' : null,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (value) => value!.isEmpty ? 'Please enter a password' : null,
-              ),
-              const SizedBox(height: 20),
-              if (_errorMessage != null)
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.red, fontSize: 14),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.blue, Colors.deepPurple],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Username'),
+                  keyboardType: TextInputType.name,
+                  style: const TextStyle(color: Colors.white),
+                  validator: (value) => value!.isEmpty ? 'Enter an email' : null,
                 ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _loginUser,
-                child: const Text('Login'),
-              ),
-            ],
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  style: const TextStyle(color: Colors.white),
+                  obscureText: true,
+                  validator: (value) => value!.isEmpty ? 'Please enter a password' : null,
+                ),
+                const SizedBox(height: 20),
+                if (_errorMessage != null)
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontSize: 14),
+                  ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _loginUser,
+                  child: const Text('Login'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

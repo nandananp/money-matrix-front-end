@@ -118,60 +118,69 @@ class _SpinScreenState extends State<SpinScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Spin Event"),
+        title: const Text("Level - 1",style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.deepPurple,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Transform.rotate(
-                  angle: _animation.value,
-                  child: Container(
-                    width: 300,
-                    height: 300,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          Colors.pink,
-                          Colors.blue,
-                          Colors.green,
-                          Colors.orange
-                        ],
-                        stops: [0.1, 0.4, 0.7, 1.0],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.blue, Colors.deepPurple],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Transform.rotate(
+                    angle: _animation.value,
+                    child: Container(
+                      width: 300,
+                      height: 300,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            Colors.pink,
+                            Colors.blue,
+                            Colors.green,
+                            Colors.orange
+                          ],
+                          stops: [0.1, 0.4, 0.7, 1.0],
+                        ),
+                      ),
+                      child: CustomPaint(
+                        painter: WheelPainter(options),
                       ),
                     ),
-                    child: CustomPaint(
-                      painter: WheelPainter(options),
-                    ),
+                  ),
+                  const Positioned(
+                    top: 20,
+                    child:
+                    Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: isSpinning ? null : spinWheel,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                const Positioned(
-                  top: 20,
-                  child:
-                  Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: isSpinning ? null : spinWheel,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                padding:
-                const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                child: const Text("Spin",
+                    style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
-              child: const Text("Spin",
-                  style: TextStyle(fontSize: 18, color: Colors.white)),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
