@@ -171,6 +171,33 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       },
     );
   }
+  void showSalaryReportPopup() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("New Month Salary Report"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("New Month Salary: ₹${financialData?["salaryReport"]?["SALARY"] ?? 0}"),
+              Text("EMIs deducted : ₹${financialData?["salaryReport"]?["EMI'S"] ?? 0}"),
+              Text("SIP Amount deducted : ₹${financialData?["salaryReport"]?["SIP AMOUNT"] ?? 0}"),
+              Text("Amount added to the Existing Savings: ₹${financialData?["salaryReport"]?["SAVINGS"] ?? 0}"),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
 
 
@@ -236,7 +263,28 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
           // Go to Spin Screen Button
           ElevatedButton(
             onPressed: () => checkAndShowLevelCompletionPopup(),
-            child: const Text("next month event"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent, // Professional blue shade
+              foregroundColor: Colors.white, // White text for contrast
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8), // Slightly rounded corners
+              ),
+            ),
+            child: const Text("Go to the next Month", style: TextStyle(fontSize: 16)),
+          ),
+          const SizedBox(height: 25),
+          ElevatedButton(
+            onPressed: showSalaryReportPopup,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green, // A balanced green for financial themes
+              foregroundColor: Colors.white, // White text for readability
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text("View Salary Report", style: TextStyle(fontSize: 16)),
           ),
         ],
       ),
