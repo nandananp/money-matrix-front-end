@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:money_matrix/StartGamePage.dart';
 
 class InstructionsPage extends StatefulWidget {
   const InstructionsPage({super.key});
@@ -68,31 +67,47 @@ class _InstructionsPageState extends State<InstructionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Instructions')),
+      backgroundColor: Colors.black, // Set black background
+      appBar: AppBar(
+        title: const Text('Instructions'),
+        backgroundColor: Colors.deepOrange, // Dark AppBar
+      ),
       body: Column(
         children: [
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
-                    ? Center(
-                        child: Text(_errorMessage!,
-                            style: const TextStyle(color: Colors.red)))
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _instructions.length,
-                        itemBuilder: (context, index) {
-                          final instruction = _instructions[index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                  child: Text(instruction['level'].toString())),
-                              title: Text(instruction['instruction']),
-                            ),
-                          );
-                        },
+                ? Center(
+              child: Text(
+                _errorMessage!,
+                style: const TextStyle(color: Colors.red),
+              ),
+            )
+                : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _instructions.length,
+              itemBuilder: (context, index) {
+                final instruction = _instructions[index];
+                return Card(
+                  color: Colors.grey[850], // Dark card background
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.blue, // Accent color
+                      child: Text(
+                        instruction['level'].toString(),
+                        style: const TextStyle(color: Colors.white),
                       ),
+                    ),
+                    title: Text(
+                      instruction['instruction'],
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -101,11 +116,12 @@ class _InstructionsPageState extends State<InstructionsPage> {
                 Navigator.pushNamed(context, "/startGame");
               },
               style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Button color
                 padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
                 textStyle: const TextStyle(fontSize: 18),
               ),
-              child: const Text("Start Level 1"),
+              child: const Text("Start Level 1", style: TextStyle(color: Colors.white)),
             ),
           ),
         ],

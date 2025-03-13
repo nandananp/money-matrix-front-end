@@ -44,6 +44,7 @@ class _StartGamePageState extends State<StartGamePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.red, // Changed background color to red
       appBar: AppBar(
         title: const Text("who am i"),
         backgroundColor: Colors.deepPurple,
@@ -83,35 +84,40 @@ class _StartGamePageState extends State<StartGamePage> {
                   "Savings: ₹${gameData!["savings"]}",
                   style: const TextStyle(fontSize: 18),
                 ),
-
                 const Divider(height: 20, thickness: 1),
                 const Text(
                   "Liabilities:",
+
                   style: TextStyle(
+
+
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+
                   ),
                 ),
                 if (gameData!["liabilities"].isEmpty)
                   const Text("No liabilities"),
-                ...gameData!["liabilities"].map<Widget>((liability) => Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      liability["liabilityName"],
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                ...gameData!["liabilities"].map<Widget>((liability) =>
+                    Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                    subtitle: Text(
-                      "EMI: ₹${liability["emi"]}, Full Amount: ₹${liability["fullAmount"]}",
-                    ),
-                  ),
-                )),
+                      child: ListTile(
+                        title: Text(
+                          liability["liabilityName"],
+                          style: const TextStyle(
+
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          "EMI: ₹${liability["emi"]}, Full Amount: ₹${liability["fullAmount"]}",
+                        ),
+                      ),
+                    )),
                 const Spacer(),
                 SizedBox(
                   width: double.infinity,
@@ -133,7 +139,7 @@ class _StartGamePageState extends State<StartGamePage> {
                     ),
                     child: const Text(
                       "My next event",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      style: TextStyle(fontSize: 18, color: Colors.lightGreenAccent),
                     ),
                   ),
                 ),
