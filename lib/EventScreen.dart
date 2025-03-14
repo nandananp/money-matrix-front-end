@@ -5,10 +5,17 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:money_matrix/FinancialReportScreen.dart';
 
-class EventScreen extends StatelessWidget {
+class EventScreen extends StatefulWidget {
   final Map<String, dynamic> eventDetails;
 
   const EventScreen({super.key, required this.eventDetails});
+
+  @override
+  _EventScreenState createState() => _EventScreenState();
+}
+
+class _EventScreenState extends State<EventScreen> {
+  final TextEditingController _eventCountController = TextEditingController(text: "0");
 
   Future<void> submitDecision(BuildContext context, String decision) async {
     const String apiUrl = "http://localhost:8080/v1/user/game/event-decision";
@@ -22,6 +29,8 @@ class EventScreen extends StatelessWidget {
       return;
     }
 
+    int eventCount = int.tryParse(_eventCountController.text) ?? 0;
+
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
@@ -29,10 +38,10 @@ class EventScreen extends StatelessWidget {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        "eventId": eventDetails["eventId"],
-        "eventType": eventDetails["eventType"],
+        "eventId": widget.eventDetails["eventId"],
+        "eventType": widget.eventDetails["eventType"],
         "eventDecision": decision,
-        "eventCount": 0
+        "eventCount": eventCount
       }),
     );
 
@@ -50,7 +59,8 @@ class EventScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isMandatory = eventDetails["eventMandatory"] == true;
+    bool isMandatory = widget.eventDetails["eventMandatory"] == true;
+    bool isStockEvent = widget.eventDetails["eventType"] == "STOCK";
 
     return Scaffold(
       appBar: AppBar(
@@ -75,19 +85,43 @@ class EventScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${eventDetails["eventName"]}",
+                      "${widget.eventDetails["eventName"]}",
                       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.deepPurple),
                     ),
                     const SizedBox(height: 10),
-                    Text("Type: ${eventDetails["eventType"]}", style: const TextStyle(fontSize: 18)),
-                    Text("Description: ${eventDetails["eventDescription"]}", style: const TextStyle(fontSize: 16)),
-                    Text("Mandatory: ${eventDetails["eventMandatory"]}", style: const TextStyle(fontSize: 16)),
-                    if (eventDetails["eventFixedAmount"] != null)
-                      Text("Fixed Amount: ₹${eventDetails["eventFixedAmount"]}", style: const TextStyle(fontSize: 16)),
-                    if (eventDetails["eventMinimumAmount"] != null && eventDetails["eventMaximumAmount"] != null)
-                      Text("Amount Range: ₹${eventDetails["eventMinimumAmount"]} - ₹${eventDetails["eventMaximumAmount"]}", style: const TextStyle(fontSize: 16)),
-                    if (eventDetails["eventCurrentPrice"] != null)
-                      Text("Current Price: ₹${eventDetails["eventCurrentPrice"]}", style: const TextStyle(fontSize: 16)),
+                    Text("Type: ${widget.eventDetails["eventType"]}", style: const TextStyle(fontSize: 18)),
+                    Text("Description: ${widget.eventDetails["eventDescription"]}", style: const TextStyle(fontSize: 16)),
+                    Text("Mandatory: ${widget.eventDetails["eventMandatory"]}", style: const TextStyle(fontSize: 16)),
+                    if (widget.eventDetails["eventFixedAmount"] != null)
+                      Text("Fixed Amount: ₹${widget.eventDetails["eventFixedAmount"]}", style: const TextStyle(fontSize: 16)),
+                    if (widget.eventDetails["eventMinimumAmount"] != null && widget.eventDetails["eventMaximumAmount"] != null)
+                      Text("Amount Range: ₹${widget.eventDetails["eventMinimumAmount"]} - ₹${widget.eventDetails["eventMaximumAmount"]}", style: const TextStyle(fontSize: 16)),
+                    if (widget.eventDetails["eventCurrentPrice"] != null)
+                      Text("Current Price: ₹${widget.eventDetails["eventCurrentPrice"]}", style: const TextStyle(fontSize: 16)),
+                    if (isStockEvent)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 15),
+                          const Text("Enter Stock Quantity:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          TextField(
+                            controller: _eventCountController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: "Enter a number",
+                            ),
+                            onChanged: (value) {
+                              if (value.isNotEmpty && int.tryParse(value) == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Please enter a valid number")),
+                                );
+                                _eventCountController.text = "0";
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
