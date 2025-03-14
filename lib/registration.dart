@@ -18,6 +18,11 @@ class _GamingRegistrationPageState extends State<GamingRegistrationPage> {
   bool _obscureText = true;
 
   Future<void> _registerUser() async {
+    if (!_isValidEmail(_emailController.text)) {
+      _showPopup("Error", "Please enter a valid email address.", false);
+      return;
+    }
+
     const String apiUrl = 'http://localhost:8080/v1/user/register';
 
     final response = await http.post(
@@ -39,6 +44,13 @@ class _GamingRegistrationPageState extends State<GamingRegistrationPage> {
     } else {
       _showPopup("Error", "Registration failed. Please try again.", false);
     }
+  }
+
+  bool _isValidEmail(String email) {
+    final RegExp emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    return emailRegex.hasMatch(email);
   }
 
   void _showPopup(String title, String message, bool isSuccess) {
