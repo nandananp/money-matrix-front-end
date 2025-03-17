@@ -46,9 +46,10 @@ class _EventScreenState extends State<EventScreen> {
     );
 
     if (response.statusCode == 200 && context.mounted) {
+      var level = widget.eventDetails['LEVEL'];
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const FinancialReportScreen()),
+        MaterialPageRoute(builder: (context) => FinancialReportScreen(level: level,)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -62,6 +62,7 @@ class _SpinScreenState extends State<SpinScreen>
 
     if (response.statusCode == 200) {
       eventDetails = jsonDecode(response.body);
+      eventDetails?['LEVEL'] = 1;
       String eventType = eventDetails!["eventType"];
       setState(() {
         targetIndex = options.indexOf(eventType);

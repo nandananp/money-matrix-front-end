@@ -65,6 +65,7 @@ class _SecondActivityScreenState extends State<SecondActivityScreen> {
 
     if (response.statusCode == 200) {
       eventDetails = jsonDecode(response.body);
+      eventDetails?['LEVEL'] = 2;
       String eventType = eventDetails!["eventType"];
       setState(() {
         targetIndex = options.indexOf(eventType);

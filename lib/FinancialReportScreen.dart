@@ -6,7 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:money_matrix/SecondLevelActivityScreen.dart';
 
 class FinancialReportScreen extends StatefulWidget {
-  const FinancialReportScreen({super.key});
+  int level ;
+   FinancialReportScreen({super.key ,required this.level });
 
   @override
   _FinancialReportScreenState createState() => _FinancialReportScreenState();
@@ -51,7 +52,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
 
     if (response.statusCode == 200) {
       final levelData = json.decode(response.body);
-      if (levelData['levelFlag'] == true) {
+      var level = widget.level;
+      if (levelData['levelFlag'] == true && level == 1) {
         showLevelCompletionPopup();
       }
     }
@@ -60,9 +62,15 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
   void checkAndShowLevelCompletionPopup() {
     if (!hasShownPopup && financialData?['liabilities'] != null) {
       bool allSettled = financialData!['liabilities'].isEmpty;
-      if (allSettled) {
+      var level = widget.level;
+      if (allSettled ) {
         hasShownPopup = true; // Mark popup as shown
-        showLevelCompletionPopup();
+        if(level == 2){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const SecondActivityScreen()));
+        }else {
+          showLevelCompletionPopup();
+        }
+
       }else{
         Navigator.push(context, MaterialPageRoute(builder: (context) => const SpinScreen()));
       }

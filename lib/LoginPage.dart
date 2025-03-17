@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         financialData = json.decode(response.body);
       });
       if(!mounted)return;
-      Navigator.push(context,MaterialPageRoute(builder: (context) => const FinancialReportScreen()));
+      Navigator.push(context,MaterialPageRoute(builder: (context) => FinancialReportScreen(level: 1,)));
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(builder: (context) => const FinancialReportScreen()),
