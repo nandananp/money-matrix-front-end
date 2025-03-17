@@ -184,7 +184,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
               Text("New Month Salary: ₹${financialData?["salaryReport"]?["SALARY"] ?? 0}"),
               Text("EMIs deducted : ₹${financialData?["salaryReport"]?["EMI'S"] ?? 0}"),
               Text("SIP Amount deducted : ₹${financialData?["salaryReport"]?["SIP AMOUNT"] ?? 0}"),
-              Text("Amount added to the Existing Savings: ₹${financialData?["salaryReport"]?["SAVINGS"] ?? 0}"),
+
             ],
           ),
           actions: [
