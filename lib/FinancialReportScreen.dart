@@ -279,22 +279,44 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                 borderRadius: BorderRadius.circular(8), // Slightly rounded corners
               ),
             ),
-            child: const Text("Go to the next Month", style: TextStyle(fontSize: 16)),
+            child: _buildActionButton(
+                "Go to the next Month", Icons.arrow_forward, Colors.blueAccent,
+                checkAndShowLevelCompletionPopup),
           ),
           const SizedBox(height: 25),
           ElevatedButton(
-            onPressed: showSalaryReportPopup,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green, // A balanced green for financial themes
-              foregroundColor: Colors.white, // White text for readability
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+                    onPressed: showSalaryReportPopup,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      // A balanced green for financial themes
+                      foregroundColor: Colors.white,
+                      // White text for readability
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: _buildActionButton("View Salary Report",
+                        Icons.bar_chart, Colors.green, showSalaryReportPopup)),
+              ],
             ),
-            child: const Text("View Salary Report", style: TextStyle(fontSize: 16)),
-          ),
-        ],
+    );
+  }
+
+  // Widget for action buttons
+  Widget _buildActionButton(String text, IconData icon, Color color, VoidCallback onPressed) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, color: Colors.white),
+        label: Text(text, style: const TextStyle(fontSize: 16, color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       ),
     );
   }
