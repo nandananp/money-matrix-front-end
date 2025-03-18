@@ -81,20 +81,51 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Congratulations!"),
-          content: const Text(
-              "You have successfully completed Level One by making your liabilities zero. Let's build passive incomes now!"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.popAndPushNamed(context,'/second_activity'),
-              child: const Text("Continue"),
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.celebration, color: Colors.orange, size: 50),
+                const SizedBox(height: 15),
+                const Text(
+                  "Congratulations!",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "You have successfully completed Level One by making your liabilities zero. Let's build passive incomes now!",
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.popAndPushNamed(context, '/second_activity'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text("Continue", style: TextStyle(fontSize: 18, color: Colors.white)),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
   }
+
 
   void settleLiability(String liabilityId, String fullAmount) async {
     final prefs = await SharedPreferences.getInstance();
@@ -184,27 +215,48 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("New Month Salary Report"),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: const Text("New Month Salary Report",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("New Month Salary: ₹${financialData?["salaryReport"]?["SALARY"] ?? 0}"),
-              Text("EMIs deducted : ₹${financialData?["salaryReport"]?["EMI'S"] ?? 0}"),
-              Text("SIP Amount deducted : ₹${financialData?["salaryReport"]?["SIP AMOUNT"] ?? 0}"),
-
+              _buildReportRow("New Month Salary", financialData?["salaryReport"]?["SALARY"]),
+              _buildReportRow("EMIs Deducted", financialData?["salaryReport"]?["EMI'S"]),
+              _buildReportRow("SIP Amount Deducted", financialData?["salaryReport"]?["SIP AMOUNT"]),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Close"),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.deepPurple,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              ),
+              child: const Text("Close", style: TextStyle(fontSize: 16)),
             ),
           ],
         );
       },
     );
   }
+
+  Widget _buildReportRow(String label, dynamic value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          Text("₹${value ?? 0}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green)),
+        ],
+      ),
+    );
+  }
+
 
 
 
@@ -218,88 +270,108 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
           : ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          Text("Job: ${financialData?["jobName"]}",
-              style: const TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold)),
-          Text("Salary: ₹${financialData?["salary"]}"),
-          Text("Passive Income: ₹${financialData?["passiveIncome"]}"),
-          Text("Game Status: ${financialData?["gameStatus"]}"),
-          Text("Savings: ₹${financialData?["savings"]}"),
-          const SizedBox(height: 16),
-
-          // Mutual Funds Section
-          const Text("Mutual Funds",
-              style:
-              TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ...?financialData?["mutualFunds"]
-              ?.map<Widget>((fund) => ListTile(
-            title: Text(fund["mutualFundName"] ?? "Unknown"),
-            subtitle: Text(
-                "Total Return: ₹${fund["totalReturn"]}, SIP: ₹${fund["sipAmount"]}"),
-          )),
-          const SizedBox(height: 16),
-
-          // Stocks Section
-          const Text("Stocks",
-              style:
-              TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ...?financialData?["stocks"]?.map<Widget>((stock) => ListTile(
-            title: Text(stock["stockName"]),
-            subtitle: Text(
-                "Stock Count: ${stock["stockCount"]}, Invested: ₹${stock["investedAmount"]}"),
-          )),
-          const SizedBox(height: 16),
-
-          // Liabilities Section
-          const Text("Liabilities",
-              style:
-              TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ...?financialData?["liabilities"]
-              ?.map<Widget>((liability) => ListTile(
-            title: Text(liability["liabilityName"].toUpperCase()),
-            subtitle: Text(
-                "EMI: ₹${liability["emi"]}, Full Amount: ₹${liability["fullAmount"]}"),
-            trailing: ElevatedButton(
-              onPressed: () => showSettlementDialog(
-                  liability["liabilityId"],
-                  liability["fullAmount"]),
-              child: const Text("Settle"),
-            ),
-          )),
-          const SizedBox(height: 16),
-
-          // Go to Spin Screen Button
-          ElevatedButton(
-            onPressed: () => checkAndShowLevelCompletionPopup(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent, // Professional blue shade
-              foregroundColor: Colors.white, // White text for contrast
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8), // Slightly rounded corners
+          Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.all(8),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Job: ${financialData?["jobName"]}",
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
+                  const SizedBox(height: 6),
+                  Text("Salary: ₹${financialData?["salary"]}", style: const TextStyle(fontSize: 16)),
+                  Text("Passive Income: ₹${financialData?["passiveIncome"]}", style: const TextStyle(fontSize: 16)),
+                  Text("Game Status: ${financialData?["gameStatus"]}", style: const TextStyle(fontSize: 16)),
+                  Text("Savings: ₹${financialData?["savings"]}", style: const TextStyle(fontSize: 16)),
+                ],
               ),
             ),
-            child: _buildActionButton(
-                "Go to the next Month", Icons.arrow_forward, Colors.blueAccent,
-                checkAndShowLevelCompletionPopup),
           ),
-          const SizedBox(height: 25),
-          ElevatedButton(
-                    onPressed: showSalaryReportPopup,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      // A balanced green for financial themes
-                      foregroundColor: Colors.white,
-                      // White text for readability
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: _buildActionButton("View Salary Report",
-                        Icons.bar_chart, Colors.green, showSalaryReportPopup)),
-              ],
+
+          const SizedBox(height: 12),
+
+          // Mutual Funds Section
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: Text("Mutual Funds",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
+          ),
+          ...?financialData?["mutualFunds"]?.map<Widget>(
+                (fund) => Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: ListTile(
+                title: Text(fund["mutualFundName"] ?? "Unknown",
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                subtitle: Text("Total Return: ₹${fund["totalReturn"]}, SIP: ₹${fund["sipAmount"]}"),
+              ),
+            ),
+          ),
+
+          // Stocks Section
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: Text("Stocks",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
+          ),
+          ...?financialData?["stocks"]?.map<Widget>(
+                (stock) => Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: ListTile(
+                title: Text(stock["stockName"],
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                subtitle: Text("Stock Count: ${stock["stockCount"]}, Invested: ₹${stock["investedAmount"]}"),
+              ),
+            ),
+          ),
+
+          // Liabilities Section
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: Text("Liabilities",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
+          ),
+          ...?financialData?["liabilities"]?.map<Widget>(
+                (liability) => Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+              child: ListTile(
+                title: Text(liability["liabilityName"].toUpperCase(),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                subtitle: Text("EMI: ₹${liability["emi"]}, Full Amount: ₹${liability["fullAmount"]}"),
+                trailing: ElevatedButton(
+                  onPressed: () => showSettlementDialog(
+                    liability["liabilityId"],
+                    liability["fullAmount"],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  child: const Text("Settle"),
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Go to Next Month Button
+          _buildActionButton("Go to the Next Month", Icons.arrow_forward, Colors.blueAccent, checkAndShowLevelCompletionPopup),
+
+          const SizedBox(height: 16),
+
+          // View Salary Report Button
+          _buildActionButton("View Salary Report", Icons.bar_chart, Colors.green, showSalaryReportPopup),
+        ],
             ),
     );
   }

@@ -52,9 +52,21 @@ class _EventScreenState extends State<EventScreen> {
         MaterialPageRoute(builder: (context) => FinancialReportScreen(level: level,)),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to submit decision")),
-      );
+      if(widget.eventDetails["eventType"] == "STOCK") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("currently you can't buy same stock twice..")),
+        );
+      } else if(widget.eventDetails["eventType"] == "MUTUAL_FUND"){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("currently you can't start same mutual fund twice..")),
+        );
+      }else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to submit")),
+        );
+        }
+
+
     }
   }
 
