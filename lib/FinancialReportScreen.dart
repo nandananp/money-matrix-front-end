@@ -34,6 +34,9 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     if (response.statusCode == 200) {
       setState(() {
         financialData = json.decode(response.body);
+        if ((financialData?["passiveIncome"] ?? 0) >= 15000) {
+          Future.delayed(Duration.zero, () => _showLevelUpDialog(context));
+        }
       });
       // Check after fetching data
     } else {
@@ -257,6 +260,58 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     );
   }
 
+  void _showLevelUpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16), // Rounded corners
+        ),
+        title: const Row(
+          children: [
+            Icon(Icons.emoji_events, color: Colors.amber, size: 28), // Trophy icon
+            SizedBox(width: 10),
+            Text(
+              "Congratulations!",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.deepPurple, // Professional color
+              ),
+            ),
+          ],
+        ),
+        content: const Text(
+          "You have completed Level - 2 🎉 , now you have successfully escaped from 'Rat-Race' and you are financially free now",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16),
+        ),
+        actions: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                backgroundColor: Colors.deepPurple,
+              ),
+              child: const Text(
+                "OK",
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
 
 
 
@@ -283,10 +338,21 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
                   const SizedBox(height: 6),
                   Text("Salary: ₹${financialData?["salary"]}", style: const TextStyle(fontSize: 16)),
+
+                  // Passive Income Section with Progress Bar
                   Text("Passive Income: ₹${financialData?["passiveIncome"]}", style: const TextStyle(fontSize: 16)),
+                  const SizedBox(height: 6),
+                  LinearProgressIndicator(
+                    value: (financialData?["passiveIncome"] ?? 0) / 15000,
+                    backgroundColor: Colors.grey[300],
+                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                  ),
+
                   Text("Game Status: ${financialData?["gameStatus"]}", style: const TextStyle(fontSize: 16)),
                   Text("Savings: ₹${financialData?["savings"]}", style: const TextStyle(fontSize: 16)),
                 ],
+
+
               ),
             ),
           ),
