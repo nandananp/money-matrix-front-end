@@ -16,6 +16,41 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   final TextEditingController _eventCountController = TextEditingController(text: "0");
+  bool _canSellStock = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.eventDetails["eventType"] == "STOCK") {
+      checkUserStock();
+    }
+  }
+
+  Future<void> checkUserStock() async {
+    const String apiUrl = "http://localhost:8080/v1/user/game/status";
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('jwt_token');
+
+    if (token == null) return;
+
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List<dynamic> stocks = data['stocks'] ?? [];
+      String currentStockName = widget.eventDetails['eventName'];
+
+      bool ownsStock = stocks.any((stock) =>
+      stock['stockName'] == currentStockName && stock['stockCount'] > 0);
+
+      setState(() {
+        _canSellStock = ownsStock;
+      });
+    }
+  }
 
   Future<void> submitDecision(BuildContext context, String decision) async {
     const String apiUrl = "http://localhost:8080/v1/user/game/event-decision";
@@ -60,13 +95,11 @@ class _EventScreenState extends State<EventScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("currently you can't start same mutual fund twice..")),
         );
-      }else {
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Failed to submit")),
         );
-        }
-
-
+      }
     }
   }
 
@@ -176,6 +209,22 @@ class _EventScreenState extends State<EventScreen> {
                 ),
                 child: const Text("Reject", style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
+              const SizedBox(height: 15),
+              if (_canSellStock && isStockEvent) ...[
+                const SizedBox(height: 25),
+                ElevatedButton(
+                  onPressed: () => submitDecision(context, "SELL"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text("Sell",
+                      style: TextStyle(fontSize: 18, color: Colors.white)),
+                ),
+              ]
             ]
           ],
         ),
