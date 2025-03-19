@@ -340,13 +340,50 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                   Text("Salary: ₹${financialData?["salary"]}", style: const TextStyle(fontSize: 16)),
 
                   // Passive Income Section with Progress Bar
-                  Text("Passive Income: ₹${financialData?["passiveIncome"]}", style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 6),
-                  LinearProgressIndicator(
-                    value: (financialData?["passiveIncome"] ?? 0) / 15000,
-                    backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Passive Income: ₹${financialData?["passiveIncome"] ?? 0}",
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 6),
+                      Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          Container(
+                            width: double.infinity, // Ensures it spans the available space
+                            height: 12, // Adjust height for better visibility
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300], // Background color
+                              borderRadius: BorderRadius.circular(6), // Rounded corners
+                            ),
+                          ),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              double progress = (financialData?["passiveIncome"] ?? 0) / 15000;
+                              return Container(
+                                width: constraints.maxWidth * progress.clamp(0.0, 1.0),
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              );
+                            },
+                          ),
+                          Positioned(
+                            right: 10,
+                            child: Text(
+                              "${(financialData?["passiveIncome"] ?? 0)}/15000",
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
+
 
                   Text("Game Status: ${financialData?["gameStatus"]}", style: const TextStyle(fontSize: 16)),
                   Text("Savings: ₹${financialData?["savings"]}", style: const TextStyle(fontSize: 16)),
