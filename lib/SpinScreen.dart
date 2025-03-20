@@ -124,6 +124,10 @@ class _SpinScreenState extends State<SpinScreen>
       ),
       body: Container(
         decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/line.jpg"), // Use NetworkImage for a URL image
+            fit: BoxFit.cover, // Covers the entire screen
+          ),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

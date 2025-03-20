@@ -34,7 +34,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
     if (response.statusCode == 200) {
       setState(() {
         financialData = json.decode(response.body);
-        if ((financialData?["passiveIncome"] ?? 0) >= 15000) {
+        if ((financialData?["passiveIncome"] ?? 0) >= 50000) {
           Future.delayed(Duration.zero, () => _showLevelUpDialog(context));
         }
       });
@@ -361,7 +361,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                           ),
                           LayoutBuilder(
                             builder: (context, constraints) {
-                              double progress = (financialData?["passiveIncome"] ?? 0) / 15000;
+                              double progress = (financialData?["passiveIncome"] ?? 0) / 50000;
                               return Container(
                                 width: constraints.maxWidth * progress.clamp(0.0, 1.0),
                                 height: 12,
@@ -375,7 +375,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                           Positioned(
                             right: 10,
                             child: Text(
-                              "${(financialData?["passiveIncome"] ?? 0)}/15000",
+                              "${(financialData?["passiveIncome"] ?? 0)}/50000",
                               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black),
                             ),
                           ),
