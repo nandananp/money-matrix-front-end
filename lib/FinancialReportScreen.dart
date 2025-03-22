@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'SpinScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:money_matrix/SecondLevelActivityScreen.dart';
+import 'package:money_matrix/finalScreen.dart';
 
 class FinancialReportScreen extends StatefulWidget {
   int level ;
@@ -291,7 +292,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.push(context,MaterialPageRoute(builder: (context) => const FinalScreen())),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
